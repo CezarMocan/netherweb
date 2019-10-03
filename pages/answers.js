@@ -7,8 +7,8 @@ import Head from '../components/Head'
 
 export default class Index extends React.Component {
     state = {
-        questionText: 'choochoo',
-        answerText: 'bapoopaq'
+        questionText: '',
+        answerText: ''
     }
     socket = null
 
@@ -27,6 +27,13 @@ export default class Index extends React.Component {
     onNewQuestion = (message) => {
         this.setState({
             questionText: message.question
+        }, () => {
+            window.speechSynthesis.cancel();            
+            var msg = new SpeechSynthesisUtterance(message.question);
+            msg.pitch = 1.5;
+            msg.voice = window.speechSynthesis.getVoices()[17]
+            console.log('voices: ', window.speechSynthesis.getVoices())
+            window.speechSynthesis.speak(msg);
         })
     }
 
@@ -70,7 +77,12 @@ export default class Index extends React.Component {
                 className="answers-container"
             >
                 <div className="question-container">
-                    { questionText }
+                    <div className="instructions-container">
+                        Type your answer in this window, and press enter whenever you are ready to send it.
+                    </div>
+                    <div>
+                        { questionText }
+                    </div>
                 </div>
 
                 <div className="answer-container">
