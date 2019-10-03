@@ -33,12 +33,14 @@ export default class Index extends React.Component {
     }
     socket = null
     questionRefs = {}
+    mousePosition = {x: 0, y: 0}
 
     socketSetup() {
         if (!this.socket) {
             this.socket = io();
             this.socket.emit('iam', { type: 'QUESTIONS' })
             this.socket.on('action:mouseMove', this.onActionMouseMove)
+            this.socket.on('action:mouseClick', this.onActionMouseClick)
         }      
     }
 
@@ -47,25 +49,39 @@ export default class Index extends React.Component {
         return false
     }
 
-    onActionMouseMove = (message) => {
-        const lPX = message.x * window.innerWidth
-        const tPX = message.y * window.innerHeight
+    updateMousePosition({ x, y }) {
+        this.mousePosition.x = x * window.innerWidth
+        this.mousePosition.y = y * window.innerHeight
 
         if (this._fakeMouse) {
-            this._fakeMouse.style.left = `${lPX}px`
-            this._fakeMouse.style.top = `${tPX}px`
+            this._fakeMouse.style.left = `${this.mousePosition.x}px`
+            this._fakeMouse.style.top = `${this.mousePosition.y}px`
         }
+    }
+
+    onActionMouseMove = (message) => {
+        this.updateMousePosition(message)        
+        const leftPX = this.mousePosition.x
+        const topPX = this.mousePosition.y
 
         let highlightedId = null
 
         Object.keys(this.questionRefs).forEach(qID => {
             let qR = this.questionRefs[qID]
-            const inRect = this.pointInRect({ x: lPX, y: tPX }, qR.getBoundingClientRect())
+            const inRect = this.pointInRect({ x: leftPX, y: topPX }, qR.getBoundingClientRect())
             if (inRect) highlightedId = qID
         })
 
         if (highlightedId != this.state.highlightedId) {
             this.setState({ highlightedId })
+        }
+    }
+
+    onActionMouseClick = (message) => {
+        this.updateMousePosition(message)
+        const { highlightedId, clickedId } = this.state
+        if (highlightedId != clickedId) {
+            this.setState({ clickedId: highlightedId })
         }
     }
 

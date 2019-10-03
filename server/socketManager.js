@@ -28,8 +28,8 @@ class SocketManager {
         socket.on('disconnect', this.onDisconnect(socket))
 
         // Events coming from mouse client
-        socket.on('mouseMove', this.mouseMove(socket))
-        socket.on('mouseClick', this.mouseClick(socket))
+        socket.on('mouseMove', this.mouseAction(socket, 'action:mouseMove'))
+        socket.on('mouseClick', this.mouseAction(socket, 'action:mouseClick'))
     }
 
     onIam(socket) {
@@ -46,25 +46,18 @@ class SocketManager {
         }
     }
 
-    mouseMove(socket) { 
+    mouseAction(socket, actionType) {
         return (message) => {
             const qid = this.getQuestionsClientId()
             if (!qid) return
             if (!this.clients[qid]) return  
             if (!this.clients[qid].socket) return
 
-            const { socket } = this.clients[qid]
+            const targetSocket = this.clients[qid].socket
             const { x, y } = message
-            socket.emit('action:mouseMove', { x, y })
+            targetSocket.emit(actionType, { x, y })
         }
     }
-
-    mouseClick(socket) {
-        return (message) => {
-            console.log('click: ', message.x, message.y)
-        }
-    }
-
 }
 
 export default new SocketManager()
