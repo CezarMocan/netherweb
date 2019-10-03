@@ -5,6 +5,8 @@ import io from 'socket.io-client'
 import Style from '../static/styles/main.less'
 import Head from '../components/Head'
 
+const FPS = 30;
+
 export default class Index extends React.Component {
     state = {
 
@@ -15,7 +17,7 @@ export default class Index extends React.Component {
     socketSetup() {
         if (!this.socket) {
             this.socket = io();
-            // this.socket.on('centralizedPhaseStartAnimation', this.centralizedPhaseStartAnimation)
+            this.socket.emit('iam', { type: 'MOUSE' })
         }      
     }
 
@@ -28,13 +30,18 @@ export default class Index extends React.Component {
 
     emitMouseEvent = (type, x, y) => {
         if (!this.socket) return
-        this.socket.emit('mouseEvent', { type, x, y })
+        this.socket.emit(type, { x, y })
     }
 
     onMouseMove = (evt) => {
         const xPct = evt.clientX / window.innerWidth
         const yPct = evt.clientY / window.innerHeight
-        this.emitMouseEvent('mouseMove', xPct, yPct)
+
+        const now = new Date().getTime()
+        if (now - this.lastEmitTimestamp > 1000 / FPS) {
+            this.emitMouseEvent('mouseMove', xPct, yPct)
+            this.lastEmitTimestamp = now
+        }
     }
 
     onClick = (evt) => {
@@ -42,6 +49,14 @@ export default class Index extends React.Component {
         const xPct = evt.clientX / window.innerWidth
         const yPct = evt.clientY / window.innerHeight
         this.emitMouseEvent('mouseClick', xPct, yPct)
+    }
+
+    componentDidMount() {
+        this.socketSetup()
+    }
+
+    componentWillUnmount() {
+        this.socketTeardown()
     }
 
     render() {

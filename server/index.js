@@ -5,6 +5,7 @@ import ioModule from 'socket.io'
 import httpModule from 'http'
 import compression from 'compression'
 import { logError, logSuccess } from './log'
+import socketManager from './socketManager'
 
 const CONFIG = {
     port: 3010
@@ -62,6 +63,9 @@ app.prepare().then(() => {
     io.on('connection', (socket) => {
         // DistributedManager.addClient(socket)
         console.log('New connection!')
+        socketManager.addClient(socket)
     })
+
+
     
 })
