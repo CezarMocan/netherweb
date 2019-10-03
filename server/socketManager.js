@@ -37,6 +37,9 @@ class SocketManager {
 
         // Events coming from questions client
         socket.on('clickedQuestion', this.questionAction(socket))
+
+        // Events coming from the answers client
+        socket.on('receivedAnswer', this.answerAction(socket))
     }
 
     onIam(socket) {
@@ -75,6 +78,18 @@ class SocketManager {
 
             const targetSocket = this.clients[id].socket
             targetSocket.emit("action:question", { question: message.question })
+        }
+    }
+
+    answerAction(socket) {
+        return (message) => {
+            const id = this.getQuestionsClientId()
+            if (!id) return
+            if (!this.clients[id]) return  
+            if (!this.clients[id].socket) return
+
+            const targetSocket = this.clients[id].socket
+            targetSocket.emit("action:answer", { answer: message.answer })
         }
     }
 }

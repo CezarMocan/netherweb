@@ -29,7 +29,9 @@ const QUESTIONS = [
 export default class Index extends React.Component {
     state = {
         highlightedId: null,
-        clickedId: null
+        clickedId: null,
+        answerVisible: false,
+        answer: ''
     }
     socket = null
     questionRefs = {}
@@ -41,6 +43,7 @@ export default class Index extends React.Component {
             this.socket.emit('iam', { type: 'QUESTIONS' })
             this.socket.on('action:mouseMove', this.onActionMouseMove)
             this.socket.on('action:mouseClick', this.onActionMouseClick)
+            this.socket.on('action:answer', this.onNewAnswer)
         }      
     }
 
@@ -88,6 +91,30 @@ export default class Index extends React.Component {
         }
     }
 
+    onNewAnswer = (message) => {
+        const { answer } = message
+        console.log('Setting answer: ', answer)
+        if (this.__timeout) clearTimeout(this.__timeout)
+        if (this._answerRef) {
+            const a = parseInt(Math.random() * 100 + 100)
+            const b = parseInt(Math.random() * 100 + 100)
+            const c = parseInt(Math.random() * 100 + 100)
+            const d = parseInt(Math.random() * 100 + 100)
+            this._answerRef.style.borderRadius = `${a}px ${b}px ${c}px ${d}px`
+        }
+        this.setState({
+            answer,
+            answerVisible: true
+        }, () => {
+            this.__timeout = setTimeout(() => {
+                this.setState({
+                    answerVisible: false,
+                })
+                this.__timeout = null
+            }, 10000)    
+        })
+    }
+
     sendQuestion(id) {
         let questionText = ''
         for (let row of QUESTIONS) {
@@ -116,12 +143,21 @@ export default class Index extends React.Component {
     }
 
     render() {
-        const { highlightedId, clickedId } = this.state
+        const { highlightedId, clickedId, answer, answerVisible } = this.state
+        const answerClass = classnames({
+            'answer-text': true,
+            'visible': answerVisible
+        })
         return (
             <div>
                 <div 
                     className="fake-mouse"
                     ref={(r) => this._fakeMouse = r}>
+                </div>
+                <div className="questions-client-answer">
+                    <div className={answerClass} ref={(r) => this._answerRef = r}>
+                        {answer}
+                    </div>
                 </div>
                 <div className="questions-container">                
                     { QUESTIONS.map(row => {

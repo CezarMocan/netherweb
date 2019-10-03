@@ -7,7 +7,8 @@ import Head from '../components/Head'
 
 export default class Index extends React.Component {
     state = {
-        questionText: 'choochoo'
+        questionText: 'choochoo',
+        answerText: 'bapoopaq'
     }
     socket = null
 
@@ -17,6 +18,10 @@ export default class Index extends React.Component {
             this.socket.emit('iam', { type: 'ANSWERS' })
             this.socket.on('action:question', this.onNewQuestion)
         }      
+    }
+
+    submitAnswer(text) {
+        this.socket.emit('receivedAnswer', { answer: text })
     }
 
     onNewQuestion = (message) => {
@@ -34,22 +39,42 @@ export default class Index extends React.Component {
 
     componentDidMount() {
         this.socketSetup()
+        document.addEventListener('keydown', this.onKeyDown)
     }
 
     componentWillUnmount() {
         this.socketTeardown()
+        document.removeEventListener('keydown', this.onKeyDown)
+    }
+
+    onKeyDown = (event) => {
+        if (event.key == 'Enter') {
+            const { answerText } = this.state
+            this.submitAnswer(answerText)
+            this.setState({ answerText: '' })    
+        } else if (event.key == 'Meta' || event.key == 'Shift') { // Command, control, shift
+
+        } else if (event.keyCode == 8) { // Backspace
+            event.preventDefault()
+            const { answerText } = this.state
+            this.setState({ answerText: answerText.slice(0, -1) })
+        } else {
+            this.setState({ answerText: this.state.answerText + event.key })    
+        }
     }
 
     render() {
-        const { questionText } = this.state
+        const { questionText, answerText } = this.state
         return (
-            <div className="answers-container">
+            <div 
+                className="answers-container"
+            >
                 <div className="question-container">
-                    { questionText }                    
+                    { questionText }
                 </div>
 
                 <div className="answer-container">
-
+                    { answerText }
                 </div>
             </div>
         )
