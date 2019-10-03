@@ -1,5 +1,9 @@
-h1 {
-    color: blue;
+@import './fonts.less';
+@import './mouse.less';
+
+body {
+    font-family: "Big Caslon", sans-serif;
+    background-color: rgb(238, 240, 238);
 }
 
 .questions-container {
@@ -15,9 +19,21 @@ h1 {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    height: 100%;
 }
 
 .questions-element-container {
-    max-width: 25%;
+    width: 100%;
+    height: 100%;
     text-align: center;
+    padding: 45px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.question-element {
+    font-size: 22pt;
+    color: rgb(46, 45, 47);
 }
