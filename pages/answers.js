@@ -7,15 +7,22 @@ import Head from '../components/Head'
 
 export default class Index extends React.Component {
     state = {
-
+        questionText: 'choochoo'
     }
     socket = null
 
     socketSetup() {
         if (!this.socket) {
             this.socket = io();
-            this.socket.emit('iam', { type: 'INDEX' })
+            this.socket.emit('iam', { type: 'ANSWERS' })
+            this.socket.on('action:question', this.onNewQuestion)
         }      
+    }
+
+    onNewQuestion = (message) => {
+        this.setState({
+            questionText: message.question
+        })
     }
 
     socketTeardown() {
@@ -34,8 +41,17 @@ export default class Index extends React.Component {
     }
 
     render() {
+        const { questionText } = this.state
         return (
-            <h1> Scuzi, papa di poopi? </h1>
+            <div className="answers-container">
+                <div className="question-container">
+                    { questionText }                    
+                </div>
+
+                <div className="answer-container">
+
+                </div>
+            </div>
         )
     }
 }

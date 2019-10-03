@@ -80,9 +80,24 @@ export default class Index extends React.Component {
     onActionMouseClick = (message) => {
         this.updateMousePosition(message)
         const { highlightedId, clickedId } = this.state
+
+        this.sendQuestion(highlightedId)
+
         if (highlightedId != clickedId) {
             this.setState({ clickedId: highlightedId })
         }
+    }
+
+    sendQuestion(id) {
+        let questionText = ''
+        for (let row of QUESTIONS) {
+            for (let q of row) {
+                if (q.id == id) questionText = q.text
+            }
+        }
+
+        if (!this.socket) return
+        this.socket.emit('clickedQuestion', { question: questionText })
     }
 
     socketTeardown() {

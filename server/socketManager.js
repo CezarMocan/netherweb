@@ -16,6 +16,10 @@ class SocketManager {
         return this.getSpecificClientId('QUESTIONS')
     }
 
+    getAnswersClientId() {
+        return this.getSpecificClientId('ANSWERS')
+    }
+
     addClient(socket) {
         this.clients[socket.id] = {
             id: socket.id,
@@ -30,6 +34,9 @@ class SocketManager {
         // Events coming from mouse client
         socket.on('mouseMove', this.mouseAction(socket, 'action:mouseMove'))
         socket.on('mouseClick', this.mouseAction(socket, 'action:mouseClick'))
+
+        // Events coming from questions client
+        socket.on('clickedQuestion', this.questionAction(socket))
     }
 
     onIam(socket) {
@@ -56,6 +63,18 @@ class SocketManager {
             const targetSocket = this.clients[qid].socket
             const { x, y } = message
             targetSocket.emit(actionType, { x, y })
+        }
+    }
+
+    questionAction(socket) {
+        return (message) => {
+            const id = this.getAnswersClientId()
+            if (!id) return
+            if (!this.clients[id]) return  
+            if (!this.clients[id].socket) return
+
+            const targetSocket = this.clients[id].socket
+            targetSocket.emit("action:question", { question: message.question })
         }
     }
 }
