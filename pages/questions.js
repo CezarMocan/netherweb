@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import io from 'socket.io-client'
 import Style from '../static/styles/main.less'
 import Head from '../components/Head'
+import { INSTALLATION_STATES } from '../constants'
 
 const QUESTIONS = [
     [
@@ -31,7 +32,8 @@ export default class Index extends React.Component {
         highlightedId: null,
         clickedId: null,
         answerVisible: false,
-        answer: ''
+        answer: '',
+        installationState: INSTALLATION_STATES.STARTING
     }
     socket = null
     questionRefs = {}
@@ -44,7 +46,19 @@ export default class Index extends React.Component {
             this.socket.on('action:mouseMove', this.onActionMouseMove)
             this.socket.on('action:mouseClick', this.onActionMouseClick)
             this.socket.on('action:answer', this.onNewAnswer)
+            this.socket.on('state:update', this.onStateUpdate)
         }      
+    }
+
+    onStateUpdate = (stateObject) => {
+        const { state } = stateObject
+        this.setState({ 
+            installationState: state,
+            answer: '',
+            answerVisible: false,
+            highlightedId: null,
+            clickedId: null
+        })
     }
 
     pointInRect(p, r) {
@@ -143,11 +157,23 @@ export default class Index extends React.Component {
     }
 
     render() {
-        const { highlightedId, clickedId, answer, answerVisible } = this.state
+        const { highlightedId, clickedId, answer, answerVisible, installationState } = this.state
+        
         const answerClass = classnames({
             'answer-text': true,
             'visible': answerVisible
         })
+
+        const introClassnames = classnames({
+            "full-screen-modal": true,
+            "visible": installationState == INSTALLATION_STATES.STARTING
+        })
+
+        const outroClassnames = classnames({
+            "full-screen-modal": true,
+            "visible": installationState == INSTALLATION_STATES.FINISHED
+        })
+
         return (
             <div>
                 <div 
@@ -184,6 +210,19 @@ export default class Index extends React.Component {
                         )
                     })}
                 </div>
+
+                <div className={introClassnames}>
+                    <div className="questions-intro-text">
+                        Hi, and welcome to The Nether 2.0.
+                    </div>
+                </div>
+
+                <div className={outroClassnames}>
+                    <div className="questions-outro-text">
+                        Thank you for visiting the The Nether 2.0.
+                    </div>
+                </div>
+
             </div>
         )
     }

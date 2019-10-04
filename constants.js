@@ -1,0 +1,5 @@
+export const INSTALLATION_STATES = {
+    'STARTING': 'STARTING',
+    'ACTIVE': 'ACTIVE',
+    'FINISHED': 'FINISHED'
+}

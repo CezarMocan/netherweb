@@ -20,6 +20,10 @@ class SocketManager {
         return this.getSpecificClientId('ANSWERS')
     }
 
+    getPapaClientId() {
+        return this.getSpecificClientId('PAPA')
+    }
+
     addClient(socket) {
         this.clients[socket.id] = {
             id: socket.id,
@@ -40,6 +44,9 @@ class SocketManager {
 
         // Events coming from the answers client
         socket.on('receivedAnswer', this.answerAction(socket))
+
+        // Events coming from papa
+        socket.on('updateInstallationState', this.updateInstallationState(socket))
     }
 
     onIam(socket) {
@@ -90,6 +97,17 @@ class SocketManager {
 
             const targetSocket = this.clients[id].socket
             targetSocket.emit("action:answer", { answer: message.answer })
+        }
+    }
+
+    updateInstallationState(socket) {
+        return (obj) => {
+            const { state } = obj
+
+            Object.values(this.clients).forEach(c => {
+                if (!c.socket) return
+                c.socket.emit("state:update", { state })
+            })
         }
     }
 }

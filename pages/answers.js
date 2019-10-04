@@ -4,11 +4,13 @@ import classnames from 'classnames'
 import io from 'socket.io-client'
 import Style from '../static/styles/main.less'
 import Head from '../components/Head'
+import { INSTALLATION_STATES } from '../constants'
 
 export default class Index extends React.Component {
     state = {
         questionText: '',
-        answerText: ''
+        answerText: '',
+        installationState: INSTALLATION_STATES.STARTING
     }
     socket = null
 
@@ -17,6 +19,7 @@ export default class Index extends React.Component {
             this.socket = io();
             this.socket.emit('iam', { type: 'ANSWERS' })
             this.socket.on('action:question', this.onNewQuestion)
+            this.socket.on('state:update', this.onStateUpdate)
         }      
     }
 
@@ -34,6 +37,15 @@ export default class Index extends React.Component {
             msg.voice = window.speechSynthesis.getVoices()[17]
             console.log('voices: ', window.speechSynthesis.getVoices())
             window.speechSynthesis.speak(msg);
+        })
+    }
+
+    onStateUpdate = (stateObject) => {
+        const { state } = stateObject
+        this.setState({ 
+            installationState: state,
+            questionText: '',
+            answerText: ''
         })
     }
 
@@ -71,7 +83,18 @@ export default class Index extends React.Component {
     }
 
     render() {
-        const { questionText, answerText } = this.state
+        const { questionText, answerText, installationState } = this.state
+
+        const introClassnames = classnames({
+            "full-screen-modal": true,
+            "visible": installationState == INSTALLATION_STATES.STARTING
+        })
+
+        const outroClassnames = classnames({
+            "full-screen-modal": true,
+            "visible": installationState == INSTALLATION_STATES.FINISHED
+        })
+
         return (
             <div 
                 className="answers-container"
@@ -87,6 +110,18 @@ export default class Index extends React.Component {
 
                 <div className="answer-container">
                     { answerText }
+                </div>
+
+                <div className={introClassnames}>
+                    <div className="answers-intro-text">
+                        Hi, and welcome to The Nether 2.0.
+                    </div>
+                </div>
+
+                <div className={outroClassnames}>
+                    <div className="answers-outro-text">
+                        Thank you for visiting the The Nether 2.0.
+                    </div>
                 </div>
             </div>
         )
