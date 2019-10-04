@@ -213,15 +213,21 @@ export default class Index extends React.Component {
 
                 <div className={introClassnames}>
                     <div className="questions-intro-text">
-                        Welcome, Participant 801! Thank you for signing up with The Mirror. Here, we aim to create the romantic experience that is best tailored to your needs. Don't worry, the entire process is anonymous, as we regard our client's safety and privacy as our top priority. Keep in mind:
+                        Welcome, Participant 801! Thank you for signing up with The Mirror. Here, we aim to create the romantic experience that is best tailored to your needs. Don't worry, the entire process is anonymous, as we regard our client's safety and privacy as our top priority.
                         <br/><br/>
-                        There is no need for you to talk or make any sound. You will be asking Participant 802 a few questions, once they are in the room. On the next screen, simply select your desired question on the screen using the mouse by your right hand.
+                        There is no need for you to talk or make any sound. You will be asking Participant 802 a few questions, once they are in the room. On the next screen, simply select your desired question using the mouse by your right hand.
+                        <br/><br/>
+                        Enjoy your visit,
+                        <br/>
+                        Papa
                     </div>
                 </div>
 
                 <div className={outroClassnames}>
-                    <div className="questions-outro-text">
-                        Thank you for visiting the The Nether 2.0.
+                    <div className="questions-outro-text">                        
+                        Thank you for visiting the The Mirror.
+                        <br/><br/>
+                        You can walk out once Participant 802 has left the room.
                     </div>
                 </div>
 
