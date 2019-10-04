@@ -1,5 +1,6 @@
 @import './fonts.less';
 @import './mouse.less';
+@import (css) url('https://fonts.googleapis.com/css?family=Playfair+Display&display=swap');
 
 @font-face {
     src: url('https://cez-file-hosting.s3.amazonaws.com/BigCaslon.ttf') format("truetype");
@@ -13,7 +14,7 @@
 @white: rgb(238, 240, 238);
 
 body {
-    font-family: Big Caslon, Times, serif;
+    font-family: Big Caslon, 'Playfair Display', courier;
     background-color: @white;
     margin: 0;
     overflow: hidden;
@@ -99,13 +100,15 @@ body {
 }
 
 .questions-intro-text {
-    font-size: 3vw;
+    font-size: 2.3vw;
     text-align: center;
+    padding: 10px;
 }
 
 .questions-outro-text {
     font-size: 3vw;
     text-align: center;
+    padding: 10px;
 }
 
 .answers-container {
@@ -150,11 +153,13 @@ body {
 .answers-intro-text {
     font-size: 36pt;
     text-align: center;
+    padding: 10px;
 }
 
 .answers-outro-text {
     font-size: 36pt;
     text-align: center;
+    padding: 10px;
 }
 
 .papa-container {
@@ -170,12 +175,12 @@ body {
     left: 0;
 
     .state-button {
-        margin: 30px;
-        padding: 30px;
+        margin: 20px 30px;
+        padding: 15px 30px;
         border: 1px solid @grey;
         background-color: @white;
         color: @grey;
-        font-size: 26pt;
+        font-size: 20pt;
         cursor: pointer;
 
         &.selected {

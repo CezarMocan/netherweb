@@ -40,6 +40,10 @@ export default class Index extends React.Component {
         this.socket.emit('updateInstallationState', { state: newState })
     }
 
+    onPlayIntroSound = () => () => {
+        this.socket.emit('playInstallationIntroSound')
+    }
+
     socketTeardown() {
         if (this.socket) {
             this.socket.disconnect()
@@ -75,6 +79,12 @@ export default class Index extends React.Component {
 
         return (
             <div className="papa-container">
+                <div className={'state-button'} onClick={this.onPlayIntroSound()}>
+                    <div className="papa-button">
+                        Play intro sound
+                    </div>
+                </div>
+
                 <div className={startingClassnames} onClick={this.onChangeState(INSTALLATION_STATES.STARTING)}>
                     <div className="papa-button">
                         Starting

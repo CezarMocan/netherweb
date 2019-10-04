@@ -47,6 +47,7 @@ class SocketManager {
 
         // Events coming from papa
         socket.on('updateInstallationState', this.updateInstallationState(socket))
+        socket.on('playInstallationIntroSound', this.playInstallationIntroSound(socket))
     }
 
     onIam(socket) {
@@ -97,6 +98,18 @@ class SocketManager {
 
             const targetSocket = this.clients[id].socket
             targetSocket.emit("action:answer", { answer: message.answer })
+        }
+    }
+
+    playInstallationIntroSound(socket) {
+        return (message) => {
+            const id = this.getAnswersClientId()
+            if (!id) return
+            if (!this.clients[id]) return  
+            if (!this.clients[id].socket) return
+
+            const targetSocket = this.clients[id].socket
+            targetSocket.emit("speak:instructions", { })
         }
     }
 

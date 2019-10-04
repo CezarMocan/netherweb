@@ -213,13 +213,11 @@ export default class Index extends React.Component {
 
                 <div className={introClassnames}>
                     <div className="questions-intro-text">
-                        Welcome, Participant 801! Thank you for signing up with The Mirror. Here, we aim to create the romantic experience that is best tailored to your needs. Don't worry, the entire process is anonymous, as we regard our client's safety and privacy as our top priority.
+                        Welcome!  Participant 801. Thank you for signing up with The Mirror Room. Here, we aim to create the romantic experience that is best tailored to your needs. Don’t worry, the entire process is anonymous, as we regard our client’s safety and privacy as our top priority. 
                         <br/><br/>
-                        There is no need for you to talk or make any sound. You will be asking Participant 802 a few questions, once they are in the room. On the next screen, simply select your desired question using the mouse by your right hand.
+                        You will be asking a few questions to Participant 802. On the next screen, simply select your desired question using the mouse close to your right hand. There is no need for you to talk or make any sound. Simply click on your desired question or type in your answers in the chat window, and our system will take care of the rest for you.
                         <br/><br/>
-                        Enjoy your visit,
-                        <br/>
-                        Papa
+                        Thank you for choosing The Mirror Room, and enjoy. 
                     </div>
                 </div>
 

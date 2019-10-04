@@ -20,11 +20,15 @@ export default class Index extends React.Component {
             this.socket.emit('iam', { type: 'ANSWERS' })
             this.socket.on('action:question', this.onNewQuestion)
             this.socket.on('state:update', this.onStateUpdate)
+            this.socket.on('speak:instructions', this.onSpeakInstructions)
         }      
     }
 
     submitAnswer(text) {
         this.socket.emit('receivedAnswer', { answer: text })
+        window.speechSynthesis.cancel();            
+        var msg = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(msg);
     }
 
     onNewQuestion = (message) => {
@@ -47,6 +51,31 @@ export default class Index extends React.Component {
             questionText: '',
             answerText: ''
         })
+    }
+
+    onSpeakInstructions = (object) => {
+        const { installationState } = this.state
+        if (installationState != INSTALLATION_STATES.STARTING) return
+        window.speechSynthesis.cancel();
+        var msg = new SpeechSynthesisUtterance(`
+            Welcome!  Participant 801 and Participant 802. Thank you for signing up with The Mirror Room. Here, we aim to create the romantic experience that is best tailored to your needs. Don’t worry, the entire process is anonymous, as we regard our client’s safety and privacy as our top priority. 
+
+            Let me show you how this works: 
+            
+            Participant 801: You will be asking a few questions to Participant 802. On the next screen, simply select your desired question using the mouse by your right hand. 
+            
+            Participant 802: You will be answering to the questions showing on your screen by typing with the keyboard provided to you. We do encourage you to try to give honest answers to ensure the best results. 
+            
+            Keep in mind: There is no need for you to talk or make any sound. 
+            
+            Simply click on your desired question or type in your answers in the chat window, and our system will take care of the rest for you.
+            
+            Thank you for choosing The Mirror Room, and enjoy!
+        `);
+        // msg.pitch = 1.5;
+        // msg.voice = window.speechSynthesis.getVoices()[17]
+
+        window.speechSynthesis.speak(msg);
     }
 
     socketTeardown() {
@@ -101,6 +130,7 @@ export default class Index extends React.Component {
             >
                 <div className="question-container">
                     <div className="instructions-container">
+                        A question will appear here.<br/>
                         Type your answer in this window, and press enter whenever you are ready to send it.
                     </div>
                     <div>
@@ -114,13 +144,17 @@ export default class Index extends React.Component {
 
                 <div className={introClassnames}>
                     <div className="answers-intro-text">
-                        Hi, and welcome to The Nether 2.0.
+                    Welcome, Participant 802! Thank you for signing up with The Mirror Room. Here, we aim to create the romantic experience that is best tailored to your needs. Don’t worry, the entire process is anonymous, as we regard our client’s safety and privacy as our top priority. 
+                    <br/><br/>
+                    You will be answering to the questions appearing on your screen by typing with the keyboard provided to you. We do encourage you to try to give honest answers to ensure the best results. There is no need for you to talk or make any sound. 
+                    <br/><br/>
+                    Thank you for choosing The Mirror Room, and enjoy. 
                     </div>
                 </div>
 
                 <div className={outroClassnames}>
                     <div className="answers-outro-text">
-                        Thank you for visiting the The Nether 2.0.
+                        Thank you for visiting the The Mirror Room.
                     </div>
                 </div>
             </div>
