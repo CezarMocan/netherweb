@@ -37,7 +37,7 @@ export default class Index extends React.Component {
     }
     socket = null
     questionRefs = {}
-    mousePosition = {x: 0, y: 0}
+    mousePosition = {x: 100, y: 100}
 
     socketSetup() {
         if (!this.socket) {
@@ -213,7 +213,9 @@ export default class Index extends React.Component {
 
                 <div className={introClassnames}>
                     <div className="questions-intro-text">
-                        Hi, and welcome to The Nether 2.0.
+                        Welcome, Participant 801! Thank you for signing up with The Mirror. Here, we aim to create the romantic experience that is best tailored to your needs. Don't worry, the entire process is anonymous, as we regard our client's safety and privacy as our top priority. Keep in mind:
+                        <br/><br/>
+                        There is no need for you to talk or make any sound. You will be asking Participant 802 a few questions, once they are in the room. On the next screen, simply select your desired question on the screen using the mouse by your right hand.
                     </div>
                 </div>
 
